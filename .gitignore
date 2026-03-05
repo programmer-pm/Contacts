@@ -1,0 +1,62 @@
+# =========================
+# Visual Studio / .NET
+# =========================
+
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+
+# VS user-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+# If you use PackageReference (modern), packages/ обычно не создаётся, но пусть будет.
+
+# Test results
+TestResults/
+*.trx
+
+# Publish outputs
+publish/
+*.pubxml
+*.publishsettings
+
+# Local databases / cache
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# WPF specific (optional)
+# =========================
+# Generated during XAML build (обычно в obj/, но на всякий)
+*.g.cs
+*.g.i.cs
+*.baml
