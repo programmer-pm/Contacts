@@ -16,7 +16,7 @@ namespace Lab2Mvvm.ViewModel
             _serializer = serializer;
         }
 
-        public bool CanExecute(object? parameter) => true;
+        public bool CanExecute(object? parameter) => _vm.IsValid;
 
         public void Execute(object? parameter)
         {
@@ -24,5 +24,8 @@ namespace Lab2Mvvm.ViewModel
         }
 
         public event EventHandler? CanExecuteChanged;
+
+        public void RaiseCanExecuteChanged()
+            => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }
