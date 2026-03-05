@@ -1,18 +1,70 @@
 // ViewModel/MainVM.cs
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Lab2Mvvm.Model;
 using Lab2Mvvm.Model.Services;
 
 namespace Lab2Mvvm.ViewModel
 {
-    public class MainVM : INotifyPropertyChanged
+    public class MainVM : INotifyPropertyChanged, IDataErrorInfo
     {
         private readonly ContactSerializer _serializer;
-
         public Contact Contact { get; private set; }
 
+        // --- ВАЛИДАЦИЯ ---
+        public string Error => string.Empty;
+
+        public string this[string columnName]
+        {
+            get
+            {
+                return columnName switch
+                {
+                    nameof(Name) => ValidateName(),
+                    nameof(PhoneNumber) => ValidatePhone(),
+                    nameof(Email) => ValidateEmail(),
+                    _ => string.Empty
+                };
+            }
+        }
+
+        public bool IsValid =>
+            string.IsNullOrWhiteSpace(ValidateName()) &&
+            string.IsNullOrWhiteSpace(ValidatePhone()) &&
+            string.IsNullOrWhiteSpace(ValidateEmail());
+
+        private string ValidateName()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+                return "Имя не должно быть пустым.";
+            if (Name.Trim().Length < 2)
+                return "Имя слишком короткое.";
+            return string.Empty;
+        }
+
+        private string ValidatePhone()
+        {
+            if (string.IsNullOrWhiteSpace(PhoneNumber))
+                return "Телефон не должен быть пустым.";
+
+            // Разрешим: цифры, пробелы, +, -, (, )
+            var ok = Regex.IsMatch(PhoneNumber, @"^[0-9\+\-\s\(\)]{5,}$");
+            return ok ? string.Empty : "Телефон содержит недопустимые символы.";
+        }
+
+        private string ValidateEmail()
+        {
+            if (string.IsNullOrWhiteSpace(Email))
+                return "Email не должен быть пустым.";
+
+            // Простая проверка для лаб. (не RFC)
+            var ok = Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return ok ? string.Empty : "Некорректный формат email.";
+        }
+
+        // --- СВОЙСТВА ДЛЯ BINDING ---
         private string _name = "";
         public string Name
         {
@@ -23,6 +75,8 @@ namespace Lab2Mvvm.ViewModel
                 _name = value;
                 Contact.Name = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsValid));
+                RaiseCanExecuteChanged();
             }
         }
 
@@ -36,6 +90,8 @@ namespace Lab2Mvvm.ViewModel
                 _phoneNumber = value;
                 Contact.PhoneNumber = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsValid));
+                RaiseCanExecuteChanged();
             }
         }
 
@@ -49,6 +105,8 @@ namespace Lab2Mvvm.ViewModel
                 _email = value;
                 Contact.Email = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(IsValid));
+                RaiseCanExecuteChanged();
             }
         }
 
@@ -68,7 +126,6 @@ namespace Lab2Mvvm.ViewModel
         {
             Contact = contact;
 
-            // обновляем свойства (и UI через уведомления)
             _name = Contact.Name ?? "";
             _phoneNumber = Contact.PhoneNumber ?? "";
             _email = Contact.Email ?? "";
@@ -76,10 +133,16 @@ namespace Lab2Mvvm.ViewModel
             OnPropertyChanged(nameof(Name));
             OnPropertyChanged(nameof(PhoneNumber));
             OnPropertyChanged(nameof(Email));
+            OnPropertyChanged(nameof(IsValid));
+            RaiseCanExecuteChanged();
+        }
+
+        private void RaiseCanExecuteChanged()
+        {
+            if (SaveCommand is SaveCommand sc) sc.RaiseCanExecuteChanged();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-
         private void OnPropertyChanged([CallerMemberName] string? propName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
