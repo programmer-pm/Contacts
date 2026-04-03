@@ -10,7 +10,9 @@ public class ImagePathToBitmapConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        // parameter = путь к placeholder в ресурсах
+        /// <summary>
+        /// parameter = путь к placeholder в ресурсах
+        /// </summary>
         var placeholder = parameter as string ?? "";
 
         string? path = value as string;
@@ -35,7 +37,9 @@ public class ImagePathToBitmapConverter : IValueConverter
 
     private static BitmapImage LoadPackImage(string packPath)
     {
-        // packPath пример: "pack://application:,,,/Assets/photo_placeholder_100x100.png"
+        /// <summary>
+        /// packPath пример: "pack://application:,,,/Assets/photo_placeholder_100x100.png"
+        /// </summary>
         var bmp = new BitmapImage();
         bmp.BeginInit();
         bmp.UriSource = new Uri(packPath, UriKind.Absolute);
@@ -44,6 +48,10 @@ public class ImagePathToBitmapConverter : IValueConverter
         return bmp;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => Binding.DoNothing;
+    public object ConvertBack(
+        object value,
+        Type targetType,
+        object parameter,
+        CultureInfo culture
+    ) => Binding.DoNothing;
 }
