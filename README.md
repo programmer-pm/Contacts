@@ -31,14 +31,14 @@
 
 ### Visual Studio
 
-Откройте `Lab2Mvvm.sln` и запустите проект.
+Откройте `Contacts.sln` и запустите проект.
 
 ### CLI
 
 ```bash
 dotnet restore
 dotnet build
-dotnet run --project Lab2Mvvm.csproj
+dotnet run --project Contacts.csproj
 ```
 
 ### Требования
