@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Contacts.Commands;
 using Contacts.Model;
 using Contacts.Model.Services;
 
@@ -171,8 +172,13 @@ namespace Contacts.ViewModel
 
             ApplyContact(_serializer.Load());
 
-            SaveCommand = new SaveCommand(this, _serializer);
-            LoadCommand = new LoadCommand(this, _serializer);
+            SaveCommand = new RelayCommand(_ => _serializer.Save(Contact), _ => IsValid);
+
+            LoadCommand = new RelayCommand(_ =>
+            {
+                var loaded = _serializer.Load();
+                ApplyContact(loaded);
+            });
         }
 
         /// <summary>
@@ -182,7 +188,6 @@ namespace Contacts.ViewModel
         public void ApplyContact(Contact contact)
         {
             Contact = contact;
-
             _name = Contact.Name ?? "";
             _phoneNumber = Contact.PhoneNumber ?? "";
             _email = Contact.Email ?? "";
@@ -191,6 +196,7 @@ namespace Contacts.ViewModel
             OnPropertyChanged(nameof(PhoneNumber));
             OnPropertyChanged(nameof(Email));
             OnPropertyChanged(nameof(IsValid));
+
             RaiseCanExecuteChanged();
         }
 
@@ -199,8 +205,8 @@ namespace Contacts.ViewModel
         /// </summary>
         private void RaiseCanExecuteChanged()
         {
-            if (SaveCommand is SaveCommand sc)
-                sc.RaiseCanExecuteChanged();
+            if (SaveCommand is RelayCommand saveRelay)
+                saveRelay.RaiseCanExecuteChanged();
         }
 
         /// <summary>
