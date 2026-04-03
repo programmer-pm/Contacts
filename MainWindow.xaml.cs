@@ -1,19 +1,16 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using Contacts.ViewModel;
 
 namespace Contacts;
 
+/// <summary>
+/// Представляет главное окно приложения для просмотра и редактирования контактных данных.
+/// </summary>
 public partial class MainWindow : Window
 {
+    /// <summary>
+    /// Инициализирует новый экземпляр окна <see cref="MainWindow"/> и назначает модель представления.
+    /// </summary>
     public MainWindow()
     {
         InitializeComponent();
