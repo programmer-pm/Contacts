@@ -1,9 +1,9 @@
 // ViewModel/SaveCommand.cs
 using System;
 using System.Windows.Input;
-using Lab2Mvvm.Model.Services;
+using Contacts.Model.Services;
 
-namespace Lab2Mvvm.ViewModel
+namespace Contacts.ViewModel
 {
     public class SaveCommand : ICommand
     {
@@ -25,7 +25,6 @@ namespace Lab2Mvvm.ViewModel
 
         public event EventHandler? CanExecuteChanged;
 
-        public void RaiseCanExecuteChanged()
-            => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

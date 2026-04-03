@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Lab2Mvvm.Model;
-using Lab2Mvvm.Model.Services;
+using Contacts.Model;
+using Contacts.Model.Services;
 
-namespace Lab2Mvvm.ViewModel
+namespace Contacts.ViewModel
 {
     public class MainVM : INotifyPropertyChanged, IDataErrorInfo
     {

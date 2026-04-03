@@ -1,10 +1,10 @@
 // Model/Services/ContactSerializer.cs
 using System;
 using System.IO;
+using Contacts.Model;
 using Newtonsoft.Json;
-using Lab2Mvvm.Model;
 
-namespace Lab2Mvvm.Model.Services
+namespace Contacts.Model.Services
 {
     public class ContactSerializer
     {

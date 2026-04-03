@@ -1,6 +1,5 @@
 // Model/Contact.cs
-namespace Lab2Mvvm.Model
-
+namespace Contacts.Model
 {
     public class Contact
     {

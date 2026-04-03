@@ -8,18 +8,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Lab2Mvvm.ViewModel;
+using Contacts.ViewModel;
 
+namespace Contacts;
 
-
-namespace Lab2Mvvm;
-    public partial class MainWindow : Window
+public partial class MainWindow : Window
+{
+    public MainWindow()
     {
-        public MainWindow()
-        {
-		InitializeComponent();
-            DataContext = new MainVM();
-        }
-
-	
+        InitializeComponent();
+        DataContext = new MainVM();
+    }
 }

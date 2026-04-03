@@ -1,9 +1,9 @@
 // ViewModel/LoadCommand.cs
 using System;
 using System.Windows.Input;
-using Lab2Mvvm.Model.Services;
+using Contacts.Model.Services;
 
-namespace Lab2Mvvm.ViewModel
+namespace Contacts.ViewModel
 {
     public class LoadCommand : ICommand
     {
