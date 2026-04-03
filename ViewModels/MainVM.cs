@@ -25,15 +25,15 @@ namespace Lab2Mvvm.ViewModel
                     nameof(Name) => ValidateName(),
                     nameof(PhoneNumber) => ValidatePhone(),
                     nameof(Email) => ValidateEmail(),
-                    _ => string.Empty
+                    _ => string.Empty,
                 };
             }
         }
 
         public bool IsValid =>
-            string.IsNullOrWhiteSpace(ValidateName()) &&
-            string.IsNullOrWhiteSpace(ValidatePhone()) &&
-            string.IsNullOrWhiteSpace(ValidateEmail());
+            string.IsNullOrWhiteSpace(ValidateName())
+            && string.IsNullOrWhiteSpace(ValidatePhone())
+            && string.IsNullOrWhiteSpace(ValidateEmail());
 
         private string ValidateName()
         {
@@ -71,7 +71,8 @@ namespace Lab2Mvvm.ViewModel
             get => _name;
             set
             {
-                if (_name == value) return;
+                if (_name == value)
+                    return;
                 _name = value;
                 Contact.Name = value;
                 OnPropertyChanged();
@@ -86,7 +87,8 @@ namespace Lab2Mvvm.ViewModel
             get => _phoneNumber;
             set
             {
-                if (_phoneNumber == value) return;
+                if (_phoneNumber == value)
+                    return;
                 _phoneNumber = value;
                 Contact.PhoneNumber = value;
                 OnPropertyChanged();
@@ -101,7 +103,8 @@ namespace Lab2Mvvm.ViewModel
             get => _email;
             set
             {
-                if (_email == value) return;
+                if (_email == value)
+                    return;
                 _email = value;
                 Contact.Email = value;
                 OnPropertyChanged();
@@ -115,8 +118,10 @@ namespace Lab2Mvvm.ViewModel
 
         public MainVM()
         {
-            Contact = new Contact("", "", "");
             _serializer = new ContactSerializer();
+            Contact = _serializer.Load();
+
+            ApplyContact(_serializer.Load());
 
             SaveCommand = new SaveCommand(this, _serializer);
             LoadCommand = new LoadCommand(this, _serializer);
@@ -139,11 +144,13 @@ namespace Lab2Mvvm.ViewModel
 
         private void RaiseCanExecuteChanged()
         {
-            if (SaveCommand is SaveCommand sc) sc.RaiseCanExecuteChanged();
+            if (SaveCommand is SaveCommand sc)
+                sc.RaiseCanExecuteChanged();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string? propName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+
+        private void OnPropertyChanged([CallerMemberName] string? propName = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
 }
