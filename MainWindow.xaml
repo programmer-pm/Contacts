@@ -27,7 +27,6 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="Edit Contact" Grid.Column="0" Margin="3">
-        
             <Grid Margin="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -67,18 +66,27 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="3">
-                    <TextBlock Text="Name:"/>
-                    <TextBlock FontWeight="Bold" Text="{Binding Name}" />
+                    <TextBlock  Margin="0,0,0,3"
+                         Text="Name:"/>
+                    <TextBlock  
+                    Padding="0 1.5 0 0"
+                        Margin="0,0,0,6" FontWeight="Bold" Text="{Binding Name}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="3">
-                    <TextBlock Text="Phone Number:"/>
-                    <TextBlock FontWeight="Bold" Text="{Binding PhoneNumber}" />
+                    <TextBlock  Margin="0,0,0,3"
+                         Text="Phone Number:"/>
+                    <TextBlock 
+                    Padding="0 1.5 0 0"
+                        Margin="0,0,0,6" FontWeight="Bold" Text="{Binding PhoneNumber}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Margin="3">
-                    <TextBlock Text="Email:"/>
-                    <TextBlock FontWeight="Bold" Text="{Binding Email}" />
+                    <TextBlock  Margin="0,0,0,3"
+                         Text="Email:"/>
+                    <TextBlock 
+                    Padding="0 1.5 0 0"
+                        Margin="0,0,0,6" FontWeight="Bold" Text="{Binding Email}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal"
