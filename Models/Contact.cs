@@ -1,24 +1,73 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace Contacts.Model
 {
     /// <summary>
     /// Представляет контакт с основными данными пользователя.
     /// </summary>
-    public class Contact
+    public class Contact : INotifyPropertyChanged
     {
+        private string _name;
+        private string _firstName;
+        private string _lastName;
+        private string _phone;
+        private string _email;
+
         /// <summary>
         /// Получает или задаёт имя контакта.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Получает или задаёт номер телефона контакта.
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber
+        {
+            get => _phone;
+            set
+            {
+                if (_phone != value)
+                {
+                    _phone = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Получает или задаёт адрес электронной почты контакта.
         /// </summary>
-        public string Email { get; set; }
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                if (_email != value)
+                {
+                    _email = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         /// <summary>
         /// Инициализирует новый пустой экземпляр класса <see cref="Contact"/>.
