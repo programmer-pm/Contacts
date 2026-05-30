@@ -10,27 +10,8 @@
     <!-- Конвертер для видимости кнопки Apply -->
     <converters:VisibilityConverter x:Key="VisibilityConverter"/>
   </Window.Resources>
-  
-  <Grid Margin="0">
-  <StackPanel Grid.Row="1" Margin="0,0,0,8">
-    <TextBlock Text="Поиск:" Margin="0,0,0,3" FontSize="12"/>
-    <TextBox x:Name="SearchBox" 
-             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-             Height="25" 
-             Padding="3">
-        <TextBox.Style>
-            <Style TargetType="TextBox">
-                <Setter Property="Background" Value="White"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="">
-                        <Setter Property="Background" Value="#FFF8F8F8"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </TextBox.Style>
-    </TextBox>
-</StackPanel>
 
+  <Grid Margin="0">
     <!-- Определяем колонки с GridSplitter -->
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" MinWidth="200"/>
@@ -43,15 +24,35 @@
       <Grid Margin="8">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
           <RowDefinition Height="*"/>
           <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <!-- Поиск -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,8">
+          <TextBlock Text="Поиск:" Margin="0,0,0,3" FontSize="12"/>
+          <TextBox x:Name="SearchBox"
+                   Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                   Height="25"
+                   Padding="3">
+            <TextBox.Style>
+              <Style TargetType="TextBox">
+                <Setter Property="Background" Value="White"/>
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Self}}" Value="">
+                    <Setter Property="Background" Value="#FFF8F8F8"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </TextBox.Style>
+          </TextBox>
+        </StackPanel>
         <!-- Заголовок списка -->
-        <TextBlock Text="Список контактов" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="1" Text="Список контактов" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
         <!-- Список контактов -->
-        <ListBox Grid.Row="1" ItemsSource="{Binding Contacts}" SelectedItem="{Binding SelectedContact, Mode=TwoWay}" DisplayMemberPath="Name" Margin="0,0,0,8"/>
+        <ListBox Grid.Row="2" ItemsSource="{Binding Contacts}" SelectedItem="{Binding SelectedContact, Mode=TwoWay}" DisplayMemberPath="Name" Margin="0,0,0,8"/>
         <!-- Кнопки управления -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
           <Button Content="Add" Command="{Binding AddCommand}" Width="Auto" Height="25" Margin="0,0,3,0" Padding="10,0"/>
           <Button Content="Edit" Command="{Binding EditCommand}" Width="Auto" Height="25" Margin="0,0,3,0" Padding="10,0"/>
           <Button Content="Remove" Command="{Binding RemoveCommand}" Width="Auto" Height="25" Padding="10,0"/>
