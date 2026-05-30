@@ -78,7 +78,7 @@ namespace Contacts.ViewModel
             AddCommand = new RelayCommand(_ => StartAdding(), _ => IsAddEnabled);
             EditCommand = new RelayCommand(_ => StartEditing(), _ => IsEditRemoveEnabled);
             RemoveCommand = new RelayCommand(_ => RemoveContact(), _ => IsEditRemoveEnabled);
-            ApplyCommand = new RelayCommand(_ => ApplyChanges(), _ => IsAdding || IsEditing);
+            ApplyCommand = new RelayCommand(_ => ApplyChanges(), _ => CanApply());
 
             /// <summary>
             // Если контактов нет, создаем пустую коллекцию
@@ -135,9 +135,28 @@ namespace Contacts.ViewModel
             get => _editingContact;
             set
             {
+                if (_editingContact != null)
+                {
+                    _editingContact.ErrorsChanged -= OnEditingContactErrorsChanged;
+                }
+
                 _editingContact = value;
+
+                if (_editingContact != null)
+                {
+                    _editingContact.ErrorsChanged += OnEditingContactErrorsChanged;
+                }
+
                 OnPropertyChanged();
             }
+        }
+
+        /// <summary>
+        // Обновляет доступность команды Apply при изменении ошибок проверки
+        /// </summary>
+        private void OnEditingContactErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        {
+            (ApplyCommand as RelayCommand)?.RaiseCanExecuteChanged();
         }
 
         /// <summary>
@@ -194,6 +213,15 @@ namespace Contacts.ViewModel
 
         public Visibility ApplyVisibility =>
             (IsAdding || IsEditing) ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        // Определяет, можно ли применить изменения: идёт редактирование
+        // или добавление и введённые данные прошли проверку
+        /// </summary>
+        private bool CanApply()
+        {
+            return (IsAdding || IsEditing) && EditingContact != null && !EditingContact.HasErrors;
+        }
 
         /// <summary>
         // Методы команд
