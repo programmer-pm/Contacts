@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Contacts.Model/Contacts.Model.csproj" />
+  <Project Path="Contacts.View/Contacts.View.csproj" />
+  <Project Path="Contacts.ViewModel/Contacts.ViewModel.csproj" />
+</Solution>
