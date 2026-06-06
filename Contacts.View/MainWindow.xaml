@@ -38,37 +38,12 @@
       <Grid Margin="8">
         <Grid.RowDefinitions>
           <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
           <RowDefinition Height="*" />
           <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!-- Поиск -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,8">
-          <TextBlock Text="Поиск:" Margin="0,0,0,3" FontSize="12" />
-          <TextBox
-            x:Name="SearchBox"
-            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-            Height="25"
-            Padding="3"
-          >
-            <TextBox.Style>
-              <Style TargetType="TextBox">
-                <Setter Property="Background" Value="White" />
-                <Style.Triggers>
-                  <DataTrigger
-                    Binding="{Binding Text, RelativeSource={RelativeSource Self}}"
-                    Value=""
-                  >
-                    <Setter Property="Background" Value="#FFF8F8F8" />
-                  </DataTrigger>
-                </Style.Triggers>
-              </Style>
-            </TextBox.Style>
-          </TextBox>
-        </StackPanel>
         <!-- Заголовок списка -->
         <TextBlock
-          Grid.Row="1"
+          Grid.Row="0"
           Text="Список контактов"
           FontWeight="Bold"
           FontSize="14"
@@ -76,14 +51,14 @@
         />
         <!-- Список контактов -->
         <ListBox
-          Grid.Row="2"
+          Grid.Row="1"
           ItemsSource="{Binding Contacts}"
           SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
           ItemTemplate="{StaticResource ContactTemplate}"
           Margin="0,0,0,8"
         />
         <!-- Кнопки управления -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
           <Button
             Content="Add"
             Command="{Binding AddCommand}"
@@ -143,6 +118,7 @@
           Grid.Row="3"
           Content="Apply"
           Command="{Binding ApplyCommand}"
+          Visibility="{Binding IsApplyVisible, Converter={StaticResource VisibilityConverter}}"
           Width="75"
           Height="25"
           HorizontalAlignment="Left"

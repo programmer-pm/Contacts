@@ -17,11 +17,9 @@ namespace Contacts.Model
         /// </summary>
         private const int MaxLength = 100;
 
-        private string _name;
-        private string _firstName;
-        private string _lastName;
-        private string _phone;
-        private string _email;
+        private string _name = string.Empty;
+        private string _phone = string.Empty;
+        private string _email = string.Empty;
 
         private readonly Dictionary<string, List<string>> _errors = new();
 
@@ -164,14 +162,14 @@ namespace Contacts.Model
         /// <summary>
         /// Событие, возникающее при изменении набора ошибок проверки.
         /// </summary>
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
         /// <summary>
         /// Возвращает ошибки проверки для указанного свойства.
         /// </summary>
         /// <param name="propertyName">Имя свойства или null для всех ошибок.</param>
         /// <returns>Список сообщений об ошибках.</returns>
-        public IEnumerable GetErrors(string propertyName)
+        public IEnumerable GetErrors(string? propertyName)
         {
             if (string.IsNullOrEmpty(propertyName))
             {
@@ -183,9 +181,9 @@ namespace Contacts.Model
                 : Enumerable.Empty<string>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

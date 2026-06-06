@@ -2,20 +2,19 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
-using Contacts.Commands;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Contacts.Model;
 using Contacts.Model.Services;
 
 namespace Contacts.ViewModel
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : ObservableObject
     {
         private ObservableCollection<Contact> _contacts;
-        private Contact _selectedContact;
-        private Contact _editingContact;
+        private Contact? _selectedContact;
+        private Contact? _editingContact;
         private bool _isAdding;
         private bool _isEditing;
 
@@ -75,10 +74,10 @@ namespace Contacts.ViewModel
             /// <summary>
             // Инициализация команд
             /// </summary>
-            AddCommand = new RelayCommand(_ => StartAdding(), _ => IsAddEnabled);
-            EditCommand = new RelayCommand(_ => StartEditing(), _ => IsEditRemoveEnabled);
-            RemoveCommand = new RelayCommand(_ => RemoveContact(), _ => IsEditRemoveEnabled);
-            ApplyCommand = new RelayCommand(_ => ApplyChanges(), _ => CanApply());
+            AddCommand = new RelayCommand(StartAdding, () => IsAddEnabled);
+            EditCommand = new RelayCommand(StartEditing, () => IsEditRemoveEnabled);
+            RemoveCommand = new RelayCommand(RemoveContact, () => IsEditRemoveEnabled);
+            ApplyCommand = new RelayCommand(ApplyChanges, CanApply);
 
             /// <summary>
             // Если контактов нет, создаем пустую коллекцию
@@ -86,6 +85,11 @@ namespace Contacts.ViewModel
             if (_contacts == null)
             {
                 _contacts = new ObservableCollection<Contact>();
+            }
+
+            if (_contacts.Count > 0)
+            {
+                SelectedContact = _contacts[0];
             }
         }
 
@@ -95,26 +99,23 @@ namespace Contacts.ViewModel
         public ObservableCollection<Contact> Contacts
         {
             get => _contacts;
-            set
-            {
-                _contacts = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _contacts, value);
         }
 
         /// <summary>
         // Выбранный контакт в списке
         /// </summary>
-        public Contact SelectedContact
+        public Contact? SelectedContact
         {
             get => _selectedContact;
             set
             {
-                if (_selectedContact != value)
+                if (SetProperty(ref _selectedContact, value))
                 {
-                    _selectedContact = value;
-                    OnPropertyChanged();
                     CancelEditing();
+                    OnPropertyChanged(nameof(IsEditRemoveEnabled));
+                    (EditCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                    (RemoveCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
                     /// <summary>
                     // КЛЮЧЕВОЕ: Копируем выбранный контакт в EditingContact
@@ -130,33 +131,38 @@ namespace Contacts.ViewModel
         /// <summary>
         // Контакт, который сейчас редактируется или создается
         /// </summary>
-        public Contact EditingContact
+        public Contact? EditingContact
         {
             get => _editingContact;
             set
             {
+                if (_editingContact == value)
+                {
+                    return;
+                }
+
                 if (_editingContact != null)
                 {
                     _editingContact.ErrorsChanged -= OnEditingContactErrorsChanged;
                 }
 
-                _editingContact = value;
+                SetProperty(ref _editingContact, value);
 
                 if (_editingContact != null)
                 {
                     _editingContact.ErrorsChanged += OnEditingContactErrorsChanged;
                 }
 
-                OnPropertyChanged();
+                (ApplyCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
         /// <summary>
         // Обновляет доступность команды Apply при изменении ошибок проверки
         /// </summary>
-        private void OnEditingContactErrorsChanged(object sender, DataErrorsChangedEventArgs e)
+        private void OnEditingContactErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
         {
-            (ApplyCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            (ApplyCommand as RelayCommand)?.NotifyCanExecuteChanged();
         }
 
         /// <summary>
@@ -167,18 +173,20 @@ namespace Contacts.ViewModel
             get => _isAdding;
             set
             {
-                _isAdding = value;
-                OnPropertyChanged();
+                if (!SetProperty(ref _isAdding, value))
+                {
+                    return;
+                }
                 OnPropertyChanged(nameof(IsReadOnly));
                 OnPropertyChanged(nameof(IsEditRemoveEnabled));
                 OnPropertyChanged(nameof(IsAddEnabled));
-                OnPropertyChanged(nameof(ApplyVisibility));
+                OnPropertyChanged(nameof(IsApplyVisible));
 
                 // Обновляем команды
-                (AddCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (EditCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (RemoveCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ApplyCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (AddCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (EditCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (RemoveCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (ApplyCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -187,18 +195,20 @@ namespace Contacts.ViewModel
             get => _isEditing;
             set
             {
-                _isEditing = value;
-                OnPropertyChanged();
+                if (!SetProperty(ref _isEditing, value))
+                {
+                    return;
+                }
                 OnPropertyChanged(nameof(IsReadOnly));
                 OnPropertyChanged(nameof(IsEditRemoveEnabled));
                 OnPropertyChanged(nameof(IsAddEnabled));
-                OnPropertyChanged(nameof(ApplyVisibility));
+                OnPropertyChanged(nameof(IsApplyVisible));
 
                 // Обновляем команды
-                (AddCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (EditCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (RemoveCommand as RelayCommand)?.RaiseCanExecuteChanged();
-                (ApplyCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (AddCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (EditCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (RemoveCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (ApplyCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
@@ -211,8 +221,7 @@ namespace Contacts.ViewModel
 
         public bool IsAddEnabled => !(IsAdding || IsEditing);
 
-        public Visibility ApplyVisibility =>
-            (IsAdding || IsEditing) ? Visibility.Visible : Visibility.Collapsed;
+        public bool IsApplyVisible => IsAdding || IsEditing;
 
         /// <summary>
         // Определяет, можно ли применить изменения: идёт редактирование
@@ -240,16 +249,17 @@ namespace Contacts.ViewModel
 
         private void StartEditing()
         {
-            if (SelectedContact == null)
+            var selectedContact = SelectedContact;
+            if (selectedContact == null)
                 return;
 
             /// <summary>
             // Создаем копию контакта для редактирования
             /// </summary>
             EditingContact = new Contact(
-                SelectedContact.Name,
-                SelectedContact.PhoneNumber,
-                SelectedContact.Email
+                selectedContact.Name,
+                selectedContact.PhoneNumber,
+                selectedContact.Email
             );
 
             /// <summary>
@@ -260,6 +270,11 @@ namespace Contacts.ViewModel
 
         private void ApplyChanges()
         {
+            if (EditingContact == null)
+            {
+                return;
+            }
+
             if (IsAdding)
             {
                 // Добавляем новый контакт
@@ -290,11 +305,12 @@ namespace Contacts.ViewModel
 
         private void RemoveContact()
         {
-            if (SelectedContact == null)
+            var selectedContact = SelectedContact;
+            if (selectedContact == null)
                 return;
 
-            int selectedIndex = Contacts.IndexOf(SelectedContact);
-            Contact contactToRemove = SelectedContact;
+            int selectedIndex = Contacts.IndexOf(selectedContact);
+            Contact contactToRemove = selectedContact;
 
             /// <summary>
             // Снимаем выделение перед удалением
@@ -344,11 +360,5 @@ namespace Contacts.ViewModel
             EditingContact = null;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }
