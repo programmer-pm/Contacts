@@ -16,6 +16,12 @@
   <Window.Resources>
     <!-- Конвертер для видимости кнопки Apply -->
     <converters:VisibilityConverter x:Key="VisibilityConverter" />
+    <Style x:Key="ActionButtonStyle" TargetType="Button">
+      <Setter Property="Height" Value="25" />
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
     <!-- Шаблон элемента списка контактов -->
     <DataTemplate x:Key="ContactTemplate">
       <StackPanel Margin="3">
@@ -58,31 +64,55 @@
           Margin="0,0,0,8"
         />
         <!-- Кнопки управления -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <UniformGrid Grid.Row="2" Columns="3">
           <Button
-            Content="Add"
             Command="{Binding AddCommand}"
-            Width="Auto"
-            Height="25"
             Margin="0,0,3,0"
-            Padding="10,0"
-          />
+            Style="{StaticResource ActionButtonStyle}"
+            ToolTip="Добавить контакт"
+          >
+            <StackPanel Orientation="Horizontal">
+              <Image
+                Width="16"
+                Height="16"
+                Margin="0,0,4,0"
+                Source="pack://application:,,,/Assets/add_contact_32x32.png"
+              />
+              <TextBlock Text="Add" />
+            </StackPanel>
+          </Button>
           <Button
-            Content="Edit"
             Command="{Binding EditCommand}"
-            Width="Auto"
-            Height="25"
             Margin="0,0,3,0"
-            Padding="10,0"
-          />
+            Style="{StaticResource ActionButtonStyle}"
+            ToolTip="Редактировать контакт"
+          >
+            <StackPanel Orientation="Horizontal">
+              <Image
+                Width="16"
+                Height="16"
+                Margin="0,0,4,0"
+                Source="pack://application:,,,/Assets/edit_contact_32x32.png"
+              />
+              <TextBlock Text="Edit" />
+            </StackPanel>
+          </Button>
           <Button
-            Content="Remove"
             Command="{Binding RemoveCommand}"
-            Width="Auto"
-            Height="25"
-            Padding="10,0"
-          />
-        </StackPanel>
+            Style="{StaticResource ActionButtonStyle}"
+            ToolTip="Удалить контакт"
+          >
+            <StackPanel Orientation="Horizontal">
+              <Image
+                Width="16"
+                Height="16"
+                Margin="0,0,4,0"
+                Source="pack://application:,,,/Assets/remove_contact_32x32.png"
+              />
+              <TextBlock Text="Remove" />
+            </StackPanel>
+          </Button>
+        </UniformGrid>
       </Grid>
     </Grid>
     <!-- GridSplitter - разделитель -->
@@ -116,13 +146,24 @@
         <!-- Кнопка Apply -->
         <Button
           Grid.Row="3"
-          Content="Apply"
           Command="{Binding ApplyCommand}"
           Visibility="{Binding IsApplyVisible, Converter={StaticResource VisibilityConverter}}"
           Width="75"
           Height="25"
           HorizontalAlignment="Left"
-        />
+          Style="{StaticResource ActionButtonStyle}"
+          ToolTip="Применить изменения"
+        >
+          <StackPanel Orientation="Horizontal">
+            <Image
+              Width="16"
+              Height="16"
+              Margin="0,0,4,0"
+              Source="pack://application:,,,/Assets/collapse_32x32.png"
+            />
+            <TextBlock Text="Apply" />
+          </StackPanel>
+        </Button>
       </Grid>
     </Grid>
   </Grid>

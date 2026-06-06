@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\*.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Contacts.Model\Contacts.Model.csproj" />
     <ProjectReference Include="..\Contacts.ViewModel\Contacts.ViewModel.csproj" />
   </ItemGroup>
